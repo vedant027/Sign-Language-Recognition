@@ -15,6 +15,12 @@ from utils import CvFpsCalc
 from model import KeyPointClassifier
 from model import PointHistoryClassifier
 
+from luma.core.interface.serial import i2c, spi, pcf8574
+from luma.core.interface.parallel import bitbang_6800
+from luma.core.render import canvas
+from luma.oled.device import sh1106
+from PIL import ImageFont
+import time
 
 def get_args():
     parser = argparse.ArgumentParser()
@@ -168,6 +174,15 @@ def main():
                     keypoint_classifier_labels[hand_sign_id],
                     point_history_classifier_labels[most_common_fg_id[0][0]],
                 )
+                serial = i2c(port=1, address=0x3C)
+                device = sh1106(serial)
+                font_path = "PixelOperator.ttf"
+                font_size = 30  # Adjust the font size as needed
+                font = ImageFont.truetype(font_path, font_size)
+                with canvas(device) as draw:
+                    draw.rectangle(device.bounding_box, outline="white", fill="black")
+                    draw.text((40, 20), keypoint_classifier_labels[hand_sign_id], fill="white", font=font)
+ 
         else:
             point_history.append([0, 0])
 
