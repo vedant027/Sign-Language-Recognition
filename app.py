@@ -182,7 +182,7 @@ def main():
                 with canvas(device) as draw:
                     draw.rectangle(device.bounding_box, outline="white", fill="black")
                     draw.text((40, 20), keypoint_classifier_labels[hand_sign_id], fill="white", font=font)
- 
+
         else:
             point_history.append([0, 0])
 
